@@ -1,0 +1,11 @@
+- name: Fail if mq_qmgr or mq_qmgr are not defined
+  ansible.builtin.fail:
+    msg: "Make sure mq_channel and mq_channel are provided."
+  when: "'mq_qmgr' is not defined or 'mq_channel' is not defined"
+
+- name: Check requested actions
+  ansible.builtin.fail:
+    msg: "Valid mq_channel_action values are START or STOP (case sensitive)"
+  when:
+    - "mq_channel_action is defined"
+    - "mq_channel_action not in ['START','STOP']"

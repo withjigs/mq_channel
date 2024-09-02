@@ -1,0 +1,19 @@
+- name: Pre-checks
+  ansible.builtin.include_tasks: pre_checks.yaml
+
+- name: Display current status of the channel
+  ansible.builtin.shell:
+    cmd: "echo 'DISPLAY CHSTATUS({{mq_channel}})' | runmqsc {{ mq_qmgr }}"
+  become: true
+  become_user: "{{ mq_user if mq_user is defined else 'mqm' }}"
+  register: display_channel_out
+
+- name: Current status of MQ channel
+  ansible.builtin.debug:
+    var: display_channel_out.stdout_lines
+
+- ansible.builtin.include_tasks: start_channel.yaml
+  when: mq_channel_action == 'START'
+
+- ansible.builtin.include_tasks: stop_channel.yaml
+  when: mq_channel_action == 'STOP'

@@ -1,0 +1,2 @@
+mq_channel_action: ''  ## valid values: 'START' 'STOP'
+mq_user: 'mqm'

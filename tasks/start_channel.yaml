@@ -1,0 +1,22 @@
+---
+- block:
+  - ansible.builtin.debug:
+      msg: "Channel is already started. No further actions required."
+  - meta: end_play
+  when: "'STATUS(RUNNING)' is in display_channel_out.stdout"
+
+- name: Start channel
+  ansible.builtin.shell:
+    cmd: "echo 'START CHANNEL({{mq_channel}})' | runmqsc {{ mq_qmgr }}"
+  become: true
+  become_user: "{{ mq_user if mq_user is defined else 'mqm'  }}"
+  register: start_channel_out
+  failed_when: "'Start IBM MQ channel accepted' not in start_channel_out.stdout"
+  
+- name: Ensure the channel is started
+  ansible.builtin.shell:
+    cmd: "echo 'DISPLAY CHSTATUS({{mq_channel}})' | runmqsc {{ mq_qmgr }}"
+  become: true
+  become_user: "{{ mq_user if mq_user is defined else 'mqm'  }}"
+  register: display_channel_after_start
+  failed_when:  "'STATUS(RUNNING)' is not in display_channel_after_start.stdout"

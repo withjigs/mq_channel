@@ -1,0 +1,22 @@
+---
+- block:
+  - ansible.builtin.debug:
+      msg: "Channel is already stopped. No further actions required."
+  - meta: end_play
+  when: "'STATUS(RUNNING)' is not in display_channel_out.stdout"
+
+- name: Stop channel
+  ansible.builtin.shell:
+    cmd: "echo 'STOP CHANNEL({{mq_channel}})' | runmqsc {{ mq_qmgr }}"
+  become: true
+  become_user: "{{ mq_user if mq_user is defined else 'mqm'  }}"
+  register: stop_channel_out
+  failed_when: "'Stop IBM MQ channel accepted' not in stop_channel_out.stdout"
+  
+- name: Ensure the channel is stopped
+  ansible.builtin.shell:
+    cmd: "echo 'DISPLAY CHSTATUS({{mq_channel}})' | runmqsc {{ mq_qmgr }}"
+  become: true
+  become_user: "{{ mq_user if mq_user is defined else 'mqm'  }}"
+  register: display_channel_after_stop
+  failed_when:  "'STATUS(STOPPED)' is not in display_channel_after_stop.stdout"
