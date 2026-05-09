@@ -1,7 +1,7 @@
-- name: Fail if mq_qmgr or mq_qmgr are not defined
+- name: Fail if mq_qmgr or mq_channel are not defined
   ansible.builtin.fail:
-    msg: "Make sure mq_channel and mq_channel are provided."
-  when: "'mq_qmgr' is not defined or 'mq_channel' is not defined"
+    msg: "Make sure mq_qmgr and mq_channel are provided."
+  when: "mq_qmgr is not defined or mq_channel is not defined"
 
 - name: Check requested actions
   ansible.builtin.fail:
