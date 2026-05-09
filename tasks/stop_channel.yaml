@@ -19,4 +19,4 @@
   become: true
   become_user: "{{ mq_user if mq_user is defined else 'mqm'  }}"
   register: display_channel_after_stop
-  failed_when:  "'STATUS(STOPPED)' is not in display_channel_after_stop.stdout"
+  failed_when: "'STATUS(RUNNING)' in display_channel_after_stop.stdout"
