@@ -3,7 +3,7 @@
   - ansible.builtin.debug:
       msg: "Channel is already stopped. No further actions required."
   - meta: end_play
-  when: "'STATUS(RUNNING)' is not in display_channel_out.stdout"
+  when: "'STATUS(RUNNING)' not in display_channel_out.stdout"
 
 - name: Stop channel
   ansible.builtin.shell:

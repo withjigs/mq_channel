@@ -3,7 +3,7 @@
   - ansible.builtin.debug:
       msg: "Channel is already started. No further actions required."
   - meta: end_play
-  when: "'STATUS(RUNNING)' is in display_channel_out.stdout"
+  when: "'STATUS(RUNNING)' in display_channel_out.stdout"
 
 - name: Start channel
   ansible.builtin.shell:
